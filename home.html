@@ -287,6 +287,126 @@
         opacity: 0.8;
         font-weight: bold;
       }
+
+      /* === 7-DAY WEATHER === */
+      .weather-box {
+        margin: 12px 0 20px;
+      }
+
+      .weather-search {
+        display: flex;
+        gap: 6px;
+        margin: 10px 0 8px;
+        max-width: 420px;
+      }
+
+      .weather-search input {
+        min-width: 0;
+        width: 100%;
+        padding: 7px 8px;
+        color: #fff;
+        background: rgba(0, 28, 40, 0.85);
+        border: 1px solid rgba(0, 247, 255, 0.6);
+        border-radius: 5px;
+        outline: none;
+      }
+
+      .weather-search input:focus {
+        box-shadow: 0 0 8px rgba(0, 247, 255, 0.8);
+      }
+
+      .weather-search button {
+        padding: 7px 9px;
+        color: #b8faff;
+        font-weight: bold;
+        background: rgba(0, 70, 90, 0.75);
+        border: 1px solid rgba(0, 247, 255, 0.6);
+        border-radius: 5px;
+      }
+
+      .weather-search button:hover {
+        color: #fff;
+        box-shadow: 0 0 8px #00f7ff;
+      }
+
+      .weather-location {
+        margin: 0 0 8px;
+        color: #b8faff;
+        font-weight: bold;
+      }
+
+      .weather-status {
+        min-height: 18px;
+        margin: 6px 0;
+        font-size: 0.78rem;
+        opacity: 0.82;
+      }
+
+      .forecast-list {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(92px, 1fr));
+        gap: 6px;
+      }
+
+      .forecast-day {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 7px;
+        padding: 7px 8px;
+        text-align: center;
+        background: rgba(0, 45, 62, 0.58);
+        border: 1px solid rgba(0, 247, 255, 0.22);
+        border-radius: 6px;
+      }
+
+      .forecast-day:first-child {
+        border-color: rgba(0, 247, 255, 0.68);
+        box-shadow: inset 0 0 8px rgba(0, 247, 255, 0.12);
+      }
+
+      .forecast-day-name {
+        color: #b8faff;
+        font-weight: bold;
+      }
+
+      .forecast-icon {
+        font-size: 1.4rem;
+        filter: drop-shadow(0 0 4px rgba(0, 247, 255, 0.45));
+      }
+
+      .forecast-temps {
+        font-variant-numeric: tabular-nums;
+      }
+
+      .forecast-low {
+        opacity: 0.68;
+      }
+
+      .forecast-rain {
+        margin-top: -5px;
+        font-size: 0.72rem;
+        opacity: 0.75;
+      }
+
+      .weather-credit {
+        margin: 9px 0 0;
+        font-size: 0.7rem;
+        opacity: 0.6;
+        text-align: right;
+      }
+
+      @media (max-width: 1050px) {
+        .forecast-list {
+          grid-template-columns: repeat(4, minmax(92px, 1fr));
+        }
+      }
+
+      @media (max-width: 600px) {
+        .forecast-list {
+          grid-template-columns: repeat(2, minmax(92px, 1fr));
+        }
+      }
     </style>
   </head>
 
@@ -471,6 +591,28 @@
             <p id="moonIllum" class="moon-sub"></p>
           </div>
         </div>
+
+        <section class="weather-box" aria-labelledby="weatherHeading">
+          <h2 id="weatherHeading">7-Day Forecast:</h2>
+          <form class="weather-search" id="weatherForm">
+            <input
+              id="weatherQuery"
+              type="search"
+              value="Hoschton, GA"
+              minlength="2"
+              aria-label="City and state"
+              placeholder="City, State"
+            />
+            <button type="submit">GO</button>
+          </form>
+          <p id="weatherLocation" class="weather-location"></p>
+          <p id="weatherStatus" class="weather-status" role="status" aria-live="polite"></p>
+          <div id="forecastList" class="forecast-list"></div>
+          <p class="weather-credit">
+            Weather data from
+            <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>
+          </p>
+        </section>
         
         <p>
           ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -815,6 +957,180 @@
           { once: true }
         );
       });
+    </script>
+
+    <script>
+      // ===== 7-DAY WEATHER (Open-Meteo; no API key needed) =====
+      const weatherForm = document.getElementById("weatherForm");
+      const weatherQuery = document.getElementById("weatherQuery");
+      const weatherLocation = document.getElementById("weatherLocation");
+      const weatherStatus = document.getElementById("weatherStatus");
+      const forecastList = document.getElementById("forecastList");
+
+      const weatherCodes = {
+        0: ["Clear", "☀️"], 1: ["Mostly clear", "🌤️"],
+        2: ["Partly cloudy", "⛅"], 3: ["Overcast", "☁️"],
+        45: ["Fog", "🌫️"], 48: ["Icy fog", "🌫️"],
+        51: ["Light drizzle", "🌦️"], 53: ["Drizzle", "🌦️"],
+        55: ["Heavy drizzle", "🌧️"], 56: ["Freezing drizzle", "🌧️"],
+        57: ["Freezing drizzle", "🌧️"], 61: ["Light rain", "🌦️"],
+        63: ["Rain", "🌧️"], 65: ["Heavy rain", "🌧️"],
+        66: ["Freezing rain", "🌧️"], 67: ["Freezing rain", "🌧️"],
+        71: ["Light snow", "🌨️"], 73: ["Snow", "🌨️"],
+        75: ["Heavy snow", "❄️"], 77: ["Snow grains", "❄️"],
+        80: ["Rain showers", "🌦️"], 81: ["Rain showers", "🌧️"],
+        82: ["Heavy showers", "⛈️"], 85: ["Snow showers", "🌨️"],
+        86: ["Heavy snow showers", "❄️"], 95: ["Thunderstorms", "⛈️"],
+        96: ["Storms with hail", "⛈️"], 99: ["Storms with hail", "⛈️"]
+      };
+
+      const stateNames = {
+        AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas",
+        CA: "California", CO: "Colorado", CT: "Connecticut", DE: "Delaware",
+        FL: "Florida", GA: "Georgia", HI: "Hawaii", ID: "Idaho",
+        IL: "Illinois", IN: "Indiana", IA: "Iowa", KS: "Kansas",
+        KY: "Kentucky", LA: "Louisiana", ME: "Maine", MD: "Maryland",
+        MA: "Massachusetts", MI: "Michigan", MN: "Minnesota", MS: "Mississippi",
+        MO: "Missouri", MT: "Montana", NE: "Nebraska", NV: "Nevada",
+        NH: "New Hampshire", NJ: "New Jersey", NM: "New Mexico", NY: "New York",
+        NC: "North Carolina", ND: "North Dakota", OH: "Ohio", OK: "Oklahoma",
+        OR: "Oregon", PA: "Pennsylvania", RI: "Rhode Island",
+        SC: "South Carolina", SD: "South Dakota", TN: "Tennessee",
+        TX: "Texas", UT: "Utah", VT: "Vermont", VA: "Virginia",
+        WA: "Washington", WV: "West Virginia", WI: "Wisconsin", WY: "Wyoming",
+        DC: "District of Columbia"
+      };
+
+      function parseLocationSearch(searchTerm) {
+        const parts = searchTerm.split(",").map((part) => part.trim()).filter(Boolean);
+        const regionText = parts.length > 1 ? parts.at(-1).toUpperCase() : "";
+        return {
+          city: parts.length > 1 ? parts.slice(0, -1).join(", ") : searchTerm.trim(),
+          region: stateNames[regionText] || (parts.length > 1 ? parts.at(-1) : "")
+        };
+      }
+
+      function chooseLocation(results, searchTerm) {
+        const wanted = parseLocationSearch(searchTerm);
+        if (!wanted.region) return results[0];
+
+        return results.find((place) =>
+          place.name.toLowerCase() === wanted.city.toLowerCase() &&
+          place.admin1?.toLowerCase() === wanted.region.toLowerCase()
+        ) || results.find((place) =>
+          place.admin1?.toLowerCase() === wanted.region.toLowerCase()
+        ) || results[0];
+      }
+
+      function formatPlace(place) {
+        const region = place.admin1 && place.admin1 !== place.name ? place.admin1 : "";
+        return [place.name, region, place.country_code].filter(Boolean).join(", ");
+      }
+
+      function renderForecast(daily) {
+        forecastList.textContent = "";
+
+        daily.time.forEach((dateString, index) => {
+          const condition = weatherCodes[daily.weather_code[index]] || ["Unknown", "🌡️"];
+          const date = new Date(`${dateString}T12:00:00`);
+          const dayName = index === 0
+            ? "TODAY"
+            : date.toLocaleDateString("en-US", { weekday: "short" }).toUpperCase();
+          const day = document.createElement("div");
+          day.className = "forecast-day";
+          day.title = condition[0];
+
+          const name = document.createElement("span");
+          name.className = "forecast-day-name";
+          name.textContent = dayName;
+          const icon = document.createElement("span");
+          icon.className = "forecast-icon";
+          icon.textContent = condition[1];
+          icon.setAttribute("aria-label", condition[0]);
+          const temps = document.createElement("span");
+          temps.className = "forecast-temps";
+          temps.append(
+            `${Math.round(daily.temperature_2m_max[index])}° `,
+            Object.assign(document.createElement("span"), {
+              className: "forecast-low",
+              textContent: `${Math.round(daily.temperature_2m_min[index])}°`
+            })
+          );
+          const rain = document.createElement("span");
+          rain.className = "forecast-rain";
+          rain.textContent = `rain ${daily.precipitation_probability_max[index] ?? 0}%`;
+          day.append(name, icon, temps, rain);
+          forecastList.appendChild(day);
+        });
+      }
+
+      async function loadWeather(searchTerm) {
+        weatherStatus.textContent = "Scanning the skies...";
+        weatherForm.querySelector("button").disabled = true;
+
+        try {
+          const parsedSearch = parseLocationSearch(searchTerm);
+          const geoUrl = new URL("https://geocoding-api.open-meteo.com/v1/search");
+          geoUrl.search = new URLSearchParams({
+            name: parsedSearch.city, count: "10", language: "en", format: "json"
+          });
+          const geoResponse = await fetch(geoUrl);
+          if (!geoResponse.ok) throw new Error("Location search failed");
+          const geoData = await geoResponse.json();
+          if (!geoData.results?.length) {
+            throw new Error("I couldn't find that place. Try a nearby city and state.");
+          }
+
+          const place = chooseLocation(geoData.results, searchTerm);
+          weatherLocation.textContent = formatPlace(place);
+          weatherStatus.textContent = "Found it. Fetching the forecast...";
+          forecastList.textContent = "";
+
+          const forecastUrl = new URL("https://api.open-meteo.com/v1/forecast");
+          forecastUrl.search = new URLSearchParams({
+            latitude: place.latitude,
+            longitude: place.longitude,
+            daily: "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max",
+            temperature_unit: "fahrenheit",
+            timezone: "auto",
+            forecast_days: "7"
+          });
+          const forecastResponse = await fetch(forecastUrl);
+          if (!forecastResponse.ok) throw new Error("Forecast request failed");
+          const forecast = await forecastResponse.json();
+          if (!forecast.daily?.time?.length) throw new Error("Forecast data was empty");
+
+          weatherQuery.value = searchTerm;
+          renderForecast(forecast.daily);
+          weatherStatus.textContent = "High / low °F · updated live";
+          try {
+            localStorage.setItem("grimMonkeyWeatherPlace", searchTerm);
+          } catch (storageError) {
+            // The forecast still works when a browser blocks local storage.
+          }
+        } catch (error) {
+          forecastList.textContent = "";
+          weatherStatus.textContent = error.message.includes("find")
+            ? error.message
+            : "Weather is temporarily unavailable. Please try again.";
+        } finally {
+          weatherForm.querySelector("button").disabled = false;
+        }
+      }
+
+      weatherForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const searchTerm = weatherQuery.value.trim();
+        if (searchTerm.length >= 2) loadWeather(searchTerm);
+      });
+
+      let savedWeatherPlace = "";
+      try {
+        savedWeatherPlace = localStorage.getItem("grimMonkeyWeatherPlace") || "";
+      } catch (storageError) {
+        // Privacy settings may block local storage.
+      }
+      loadWeather(savedWeatherPlace || weatherQuery.value);
     </script>
   </body>
 </html>
