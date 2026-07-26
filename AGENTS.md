@@ -7,7 +7,7 @@ This repository publishes a static GitHub Pages site.
 - Never add `Co-authored-by` trailers or otherwise identify an AI agent as a co-author in commit messages.
 - Always create or switch to a dedicated task branch before making changes. Do not work directly on `main`.
 - Commit early and often using small, focused commits that each leave the repository in a coherent state.
-- Obtain the user's explicit confirmation immediately before every `git push` or other operation that updates a remote. Earlier approval, a general instruction to publish, or approval from another task does not count.
+- Obtain the user's explicit confirmation immediately before every `git push`. Earlier approval, a general instruction to publish, or approval from another task does not count.
 - Before requesting confirmation for any remote push:
   1. Review `git status`, including untracked and ignored files.
   2. Re-scan filenames and staged content for credentials, API keys, tokens, private keys, environment files, and other secrets.
@@ -19,14 +19,19 @@ This repository publishes a static GitHub Pages site.
 
 - Keep task branches short-lived and narrowly scoped.
 - Regularly compare the task branch with `main` and incorporate current `main` before the branches diverge significantly.
-- Suggest pushing the task branch for review and merge at these optimal checkpoints:
-  1. After the first complete, tested unit of work.
-  2. Before beginning a separate feature or broad refactor.
-  3. Whenever `main` has advanced enough to create meaningful divergence.
-  4. At the end of each working session.
-  5. As soon as the branch is tested, reviewable, and ready to merge.
+- Suggest pushing when a tested unit is reviewable, before starting unrelated work, or when the branch is drifting from `main`.
 - Prefer multiple small branches and merges over a long-running branch.
 - A suggestion to push is not permission to push. Obtain explicit confirmation immediately before every push.
+
+## Pull requests
+
+- The agent owns the PR workflow: push the branch after confirmation, create the PR, monitor checks, fix failures, keep the branch current, and merge after the user approves the merge.
+- Do not tell the user to create or manage the PR manually when the available GitHub tools can do it.
+- Keep the CLI handoff brief:
+  1. Ask: `Push this branch and open a PR?`
+  2. Afterward, provide the PR link and a one-line checks status.
+  3. When ready, ask: `Merge this PR?`
+  4. After merging, report the result and return the local repository to current `main`.
 
 ## Site structure
 

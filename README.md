@@ -14,3 +14,7 @@ ayaya
 - `.github/workflows/static.yml` deploys the repository to GitHub Pages.
 
 When moving or renaming an asset, update every HTML/CSS reference and validate paths using exact, case-sensitive filenames before committing.
+
+## Git workflow
+
+Make changes on a short-lived branch, commit them, and merge them into `main` after review.
