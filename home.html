@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="https://i.imgur.com/hki6WZI.gif" />
+    <meta property="og:image" content="https://i.imgur.com/hki6WZI.gif" />
+    <title>Grim Monkey</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* === GLOBAL === */
+      body {
+        background-image: url("https://grimmonkey.neocities.org/e5dd9ca7-19d8-47f5-8325-ef183d0e06a6.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-attachment: scroll;
+        min-height: 100vh;
+
+        color: white;
+        font-family: Arial, sans-serif;
+        margin: 0;
+
+        /* space for fixed banner */
+        padding-top: 38px;
+      }
+
+      /* Cursor  */
+      * {
+        cursor: url(https://cur.cursors-4u.net/symbols/sym-1/sym46.cur), auto !important;
+      }
+
+      h1 {
+        font-family: "Black Ops One", sans-serif;
+        text-align: center;
+        margin-top: 0;
+      }
+
+      /* === SCROLLING TOP BANNER === */
+      .top-banner {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 38px;
+        overflow: hidden;
+        z-index: 9999;
+
+        background: rgba(0, 0, 0, 0.7);
+        border-bottom: 1px solid rgba(0, 255, 255, 0.4);
+        box-shadow: 0 0 12px rgba(0, 255, 255, 0.4);
+      }
+
+      .banner-track {
+        display: flex;
+        width: max-content;
+        will-change: transform;
+        transform: translate3d(0, 0, 0);
+        /* IMPORTANT: no CSS animation here (JS controls transform) */
+      }
+
+      .banner-content {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        padding-right: 70px;
+      }
+
+      .banner-text,
+      .banner-time {
+        white-space: nowrap;
+        font-size: 16px;
+        line-height: 38px;
+        color: #b8faff;
+        text-shadow: 0 0 6px #00f7ff, 0 0 12px #0085ff;
+      }
+
+      /* prevents time width changes causing seams */
+      .banner-time {
+        display: inline-block;
+        min-width: 120px;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* === MAIN 3-COLUMN LAYOUT === */
+      .layout {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 20px;
+        padding: 40px 120px;
+      }
+
+      /* LEFT COLUMN (stacked boxes) */
+      .left-column {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      /* RIGHT COLUMN (stacked boxes) */
+      .side-column {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      /* Shared box style */
+      .chat-box,
+      .content-box,
+      .side-box {
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+        border-radius: 10px;
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(0, 0, 0, 0.5);
+      }
+
+      /* Chat */
+      .chat-box {
+        padding: 10px;
+        width: 250px;
+        height: 350px;
+      }
+
+      /* Main content */
+      .content-box {
+        padding: 30px;
+        margin: 0;
+        width: 80%;
+        max-width: 850px;
+        text-align: left;
+      }
+
+      /* Side boxes (left + right) */
+      .side-box {
+        width: 230px;
+        padding: 12px 16px;
+        color: white;
+        font-size: 0.9rem;
+      }
+
+      .side-box h3 {
+        margin: 0 0 6px 0;
+        font-size: 1rem;
+      }
+
+      .side-box a {
+        color: white;
+        text-decoration: underline;
+      }
+
+      /* === NAV IN LEFT BOX === */
+      .left-column nav {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-top: 8px;
+      }
+
+      .left-column nav a {
+        text-align: center;
+        text-decoration: none;
+        padding: 8px 14px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        background: rgba(0, 50, 70, 0.4);
+        box-shadow: 0 0 4px rgba(0, 255, 255, 0.4),
+          inset 0 0 4px rgba(0, 255, 255, 0.2);
+        font-weight: bold;
+        color: #b8faff;
+      }
+
+      .left-column nav a:hover {
+        background: rgba(0, 90, 110, 0.6);
+        color: #ffffff;
+        box-shadow: 0 0 12px #00f7ff, 0 0 22px #0085ff,
+          inset 0 0 4px #00baff;
+        text-shadow: 0 0 6px #00f7ff, 0 0 10px #0085ff;
+      }
+
+      /* Website I Like links */
+      .liked-sites a {
+        color: white;
+      }
+
+      /* === CENTER NAV BUTTON (KEEP SWIMMING STYLE — NO POSITIONING) === */
+      .center-button {
+        display: inline-block;
+        padding: 16px 64px;
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        text-decoration: none;
+
+        font-size: 20px;
+        border: 2px solid white;
+        border-radius: 8px;
+
+        transition: all 0.2s ease;
+      }
+
+      .center-button:hover {
+        background: rgba(10, 10, 10, 0.85);
+        border-color: #1a1a1a;
+      }
+      
+      /* === MOON PHASE WIDGET === */
+      .moon-box {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin: 10px 0 20px 0;
+      }
+
+      .moon-emoji {
+        font-size: 48px;
+        line-height: 1;
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+      }
+
+      .moon-info p {
+        margin: 0;
+      }
+
+      #moonName {
+        font-weight: bold;
+        font-size: 1.1rem;
+        color: #b8faff;
+        text-shadow: 0 0 6px #00f7ff;
+      }
+
+      .moon-sub {
+        font-size: 0.85rem;
+        opacity: 0.8;
+        margin-top: 2px;
+      }
+      
+      .tarot-wrap {
+        display: flex;
+        justify-content: center;
+        margin: 20px auto;
+        perspective: 1000px;
+      }
+
+      .tarot-img {
+        width: 180px;
+        height: 318px;
+        cursor: pointer;
+        display: block;
+        border-radius: 10px;
+        transition: transform 0.3s ease-in, filter 0.4s ease;
+        will-change: transform;
+      }
+
+      .tarot-img.revealed {
+        cursor: default;
+        filter: drop-shadow(0 0 12px rgba(0, 0, 0, 0.9))
+          drop-shadow(0 0 24px rgba(0, 0, 0, 0.7))
+          drop-shadow(0 0 36px rgba(0, 0, 0, 0.5));
+      }
+
+      /* === scroll side box === */
+      .side-box.updatesBox {
+        padding: 12px 16px;
+      }
+
+      .side-box.updatesBox .updatesScroll {
+        max-height: 220px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 8px;
+        margin-top: 8px;
+      }
+
+      .side-box.updatesBox .updatesScroll p {
+        margin: 0 0 10px 0;
+        font-size: 14px;
+        line-height: 1.3;
+      }
+
+      .side-box.updatesBox .date {
+        opacity: 0.8;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Cursor credit (kept as-is) -->
+    <a
+      href="https://www.cursors-4u.com/cursor/2005/05/04/sym46.html"
+      target="_blank"
+      rel="noopener"
+    >
+      <img
+        src="https://cur.cursors-4u.net/cursor.png"
+        style="position: absolute; top: 0; right: 0"
+        alt="Cursor credit"
+      />
+    </a>
+
+    <!-- Scrolling Banner (IMPORTANT: only ONE banner-content in HTML; JS clones it) -->
+    <div class="top-banner">
+      <div class="banner-track">
+        <div class="banner-content">
+          <span class="banner-text">WELCOME | BEST VIEWED AT 3AM | NO ADS | OPEN 24HRS | 2.39 REG | 2.56 DIESEL | SODA | ATM INSIDE | </span>
+          <span class="banner-time">[ TIME ]</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="layout">
+      <!-- ===== LEFT COLUMN ===== -->
+      <div class="left-column">
+        <!-- Nav box FIRST (above chat) -->
+        <div class="side-box">
+          <nav>
+            <a href="index.html">Home</a>
+            <a href="art.html">Art</a>
+            <a href="music.html">Music</a>
+            <a href="moviesshows.html">Shrines</a>
+            <a href="conspiracies.html">Conspiracies</a>
+            <a href="treasure.html">Treasure</a>
+            <a href="cars.html">Cars</a>
+            <a href="webbuilding.html">WebBuilding</a>
+          </nav>
+        </div>
+
+        <!-- Chat box SECOND -->
+        <div class="chat-box">
+          <script
+            id="cid0020000426385312866"
+            data-cfasync="false"
+            async
+            src="//st.chatango.com/js/gz/emb.js"
+            style="width: 250px; height: 350px"
+          >
+            {"handle":"grimmonkeys","arch":"js","styles":{"a":"336666","b":100,"c":"FFFFFF","d":"FFFFFF","k":"336666","l":"336666","m":"336666","n":"FFFFFF","p":"10","q":"336666","r":100,"fwtickm":1}}
+          </script>
+        </div>
+
+        <!-- Image box THIRD -->
+        <div class="side-box">
+          <h3>My Button:</h3>
+          <p>
+            <img src="https://grimmonkey.neocities.org/GrimMonkey.png" alt="Grim Monkey button" />
+          </p>
+        </div>
+
+        <!-- Image box FOURTH -->
+        <div class="side-box">
+          <h3>Internet Neighbors:</h3>
+          <p>
+            <a href="https://pearliynsboard.neocities.org/">
+              <img
+                src="https://files.catbox.moe/nqsgvm.gif"
+                style="height: 31px; width: 88px"
+                alt="Pearliyn's Board"
+              />
+            </a>
+
+            <a href="https://petrapixel.neocities.org/" target="_blank" rel="noopener">
+              <img
+                src="https://cdn.jsdelivr.net/gh/petracoding/petrapixel.neocities.org@latest/public/assets/img/linkback.gif"
+                alt="PetraPixel"
+              />
+            </a>
+
+            <a href="https://slushiecafe.neocities.org/">
+              <img src="https://grimmonkey.neocities.org/slushiecafebutton.gif" alt="SlushieCafe" />
+            </a>
+
+            <a href="https://frutigeraeroarchive.org/">
+              <img
+                src="https://grimmonkey.neocities.org/frutigeraeroarchive_button.png"
+                alt="Frutiger Aero Archive"
+              />
+            </a>
+
+            <a href="https://k233.neocities.org/">
+              <img src="https://grimmonkey.neocities.org/K233'sbutton.gif" alt="K233" />
+            </a>
+
+            <a href="https://cheytopia.neocities.org/">
+              <img src="https://grimmonkey.neocities.org/cheytopiabutton.png" alt="Cheytopia" />
+            </a>
+
+            <a target="_blank" rel="noopener" href="https://toribytez.neocities.org/">
+              <img src="https://toribytez.neocities.org/art/branding/trbz-btn.png" alt="Toribytez" />
+            </a>
+
+            <a href="https://fish2fish.neocities.org/">
+              <img
+                src="https://grimmonkey.neocities.org/fish2fishbutton.gif"
+                width="88"
+                height="31"
+                alt="Fish2Fish"
+              />
+            </a>
+
+            <a href="https://seafare.neocities.org/">
+              <img src="https://grimmonkey.neocities.org/seafarebutton.png" alt="Seafare" />
+            </a>
+
+            <a href="https://altalenae.neocities.org/">
+              <img src="https://grimmonkey.neocities.org/altalenaebutton.png" alt="Altalenae" />
+            </a>
+
+            <a href="https://hello-room.neocities.org/home">
+              <img src="https://grimmonkey.neocities.org/helloroombutton.gif" alt="Hello Room" />
+            </a>
+
+            <a href="https://robophobia.org/">
+              <img src="https://grimmonkey.neocities.org/robophobia_button.png" alt="Robophobia" />
+            </a>
+            
+            <a href="https://404city.neocities.org/" target="_blank"><img src="https://404city.neocities.org/btn.gif" alt="Website button of https://404city.neocities.org" style="width: 88px; height: 31px; image-rendering: pixelated;"></a>
+            
+            <p><a href="https://backroomsequinox.com/">The Backrooms [EQUINOX CANON]</a></p>
+          <p><a href="https://angrydroid.neocities.org/angrydroidwebsite/">Mythic Capsule Viewer</a></p>
+          </p>
+        </div>
+
+        <div class="center-nav">
+          <a href="https://grimmonkey.neocities.org/areyoulost" class="center-button">
+            Swim Deeper?
+          </a>
+        </div>
+      </div>
+
+      <!-- ===== CENTER CONTENT ===== -->
+      <div class="content-box">
+        <h1>Welcome</h1>
+
+        <p>
+          Hello, welcome to my first website. My only goal is to add to the internet
+          nonsense and hopefully spread some joy. For the sake of having a name, I'm
+          Grim Monkey. I have punk morals and taste, I enjoy the cyberpunk aesthetic,
+          I love cars (especially JDM), I like making/consuming art, and I love the ocean.
+        </p>
+
+        <p>p.s. - This website is better on pc/laptop (T-T)</p>
+
+        <h2>More about Me:</h2>
+
+        <p>Favorite Movie rn: Obsession</p>
+        <p>Favorite Shows rn: Rick 'n Morty, H2O</p>
+        <p>Favorite Colors: Blue, Red, Black, Pink</p>
+        <p>Favorite Animal: Grizzly Bear</p>
+        <p>Safe Places: Underwater, in my Car, the Internet</p>
+
+        <p>
+          ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+          ~ ~ ~ ~ ~ ~ ~ ~ ~
+        </p>
+
+        <h2>Phase of the Moon Currently:</h2>
+
+        <div class="moon-box">
+          <svg width="70" height="70" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="75" fill="#08141a" />
+            <path id="moonPath" fill="#b8faff" />
+          </svg>
+          <div class="moon-info">
+            <p id="moonName">Loading...</p>
+            <p id="moonIllum" class="moon-sub"></p>
+          </div>
+        </div>
+        
+        <p>
+          ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+          ~ ~ ~ ~ ~ ~ ~ ~ ~
+        </p>
+        
+        <h2>Want to know your future?</h2>
+
+        <div class="tarot-wrap">
+          <img
+            id="tarotCard"
+            class="tarot-img"
+            src="PASTE_CARD_BACK_IMAGE_URL_HERE"
+            alt="Tarot card back"
+          />
+        </div>
+        
+      </div>
+
+      <!-- ===== RIGHT SIDEBAR ===== -->
+      <div class="side-column">
+        <div class="side-box">
+          <h3><a href="https://neocities.org/browse">Return to NeoBrowser &gt;</a></h3>
+        </div>
+
+        <div class="side-box">
+          <h3>Last Updated:</h3>
+          <p>07-22-2026 @ 3:00pm</p>
+        </div>
+
+        <div class="side-box">
+          <h3>Established:</h3>
+          <p>
+            Dec. 09, 2025 @ 9pm
+            <img
+              src="https://grimmonkey.neocities.org/madeinusa.png"
+              width="100"
+              height="55"
+              alt="Made in USA"
+            />
+          </p>
+        </div>
+
+        <div class="side-box">
+          <h3>Special Notices:</h3>
+          <p>- Not all art/photos on this website are MY content, ex: the backgrounds</p>
+          <p>- 18+ please</p>
+          <p>- If it's underlined, it's a link</p>
+        </div>
+
+        <div class="side-box">
+          <h3>Sign the GuestBook:</h3>
+          <p>
+            <a href="https://grimmonkey.atabook.org/">
+              <img
+                src="https://grimmonkey.neocities.org/GuestBook.png"
+                width="150"
+                height="150"
+                alt="GuestBook button"
+              />
+            </a>
+          </p>
+        </div>
+
+        <div class="side-box">
+          <h3>Follow My Neocities Profile:</h3>
+          <p><a href="https://neocities.org/site/grimmonkey">GrimMonkey</a></p>
+        </div>
+
+        <div class="side-box">
+          <h3>Plans for Website:</h3>
+          <p>- Make home page look better</p>
+          <p>- Add more info to shrines</p>
+          <p>- make animated button</p>
+        </div>
+
+        <div class="side-box updatesBox">
+          <h3>Updates/Thoughts:</h3>
+
+          <div class="updatesScroll">
+            <p><span class="date">July 22, 2026</span> — Added "Phase of the Moon Today" section. Removed Fortuneteller for restructuring. Added Tarot Card placeholder.</p>
+            <p><span class="date">June 8, 2026</span> — Added Neverness to Everness to shrine. This game definitely keeps me from working on my website.</p>
+            <p><span class="date">Jan 13, 2026</span> — First day back to class</p>
+            <p><span class="date">Jan 8, 2026</span> — Got it!</p>
+            <p><span class="date">Jan 7, 2026</span> — I can not get this scrolling banner to work</p>
+            <p><span class="date">Jan 7, 2026</span> — Excited to play dnd tn</p>
+            <p><span class="date">Jan 5, 2026</span> — Added Website Button</p>
+            <p><span class="date">Jan 5, 2026</span> — It's very foggy outside today</p>
+            <p><span class="date">Jan 5, 2026</span> — Added "Updates/Thoughts" box</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ===== TIME IN BANNER =====
+      function updateBannerTime() {
+  const now = new Date();
+
+  const parts = now.toLocaleString("en-US", {
+    weekday: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true
+  }).split(" ");
+
+  // parts example: ["Wed", "01:05", "PM"]
+  parts[0] = parts[0].toUpperCase();
+
+  const timeString = parts.join(" ");
+
+  document.querySelectorAll(".banner-time").forEach(el => {
+    el.textContent = timeString;
+  });
+}
+
+      updateBannerTime();
+      setInterval(updateBannerTime, 60000);
+    </script>
+
+    <script>
+  // ===== GAPLESS MARQUEE (auto-clones to fill viewport) =====
+  const track = document.querySelector(".banner-track");
+  const chunk = track.querySelector(".banner-content");
+  const banner = document.querySelector(".top-banner");
+
+  let x = 0;
+  let last = performance.now();
+  const speed = 70; // px/sec
+
+  function rebuildClones() {
+    // Remove old clones (keep only the first original)
+    [...track.querySelectorAll(".banner-content")].slice(1).forEach(n => n.remove());
+
+    // Measure chunk width
+    const chunkW = chunk.getBoundingClientRect().width;
+    const bannerW = banner.getBoundingClientRect().width;
+
+    // If chunk is tiny, avoid infinite loop
+    if (chunkW < 5) return;
+
+    // Clone enough to cover banner + 2 chunks (extra buffer)
+    const needed = Math.ceil((bannerW + chunkW * 2) / chunkW);
+
+    for (let i = 0; i < needed; i++) {
+      track.appendChild(chunk.cloneNode(true));
+    }
+  }
+
+  // Rebuild after fonts/images/time render + on resize
+  window.addEventListener("load", rebuildClones);
+  window.addEventListener("resize", rebuildClones);
+  rebuildClones();
+
+  function tick(now) {
+    const dt = (now - last) / 1000;
+    last = now;
+
+    const chunkW = chunk.getBoundingClientRect().width;
+    if (chunkW > 0) {
+      x -= speed * dt;
+      if (x <= -chunkW) x += chunkW;
+      track.style.transform = `translate3d(${x}px, 0, 0)`;
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  requestAnimationFrame(tick);
+</script>
+
+<script>
+      // Moon phase arc-drawing logic adapted from tingletech/moon-phase
+      // Copyright (c) 2012, Regents of the University of California, BSD license
+      function getMoonPhase(date = new Date()) {
+        const knownNewMoon = new Date("2000-01-06T18:14:00Z");
+        const synodicMonth = 29.530588853;
+
+        const daysSince = (date - knownNewMoon) / 86400000;
+        const phase = ((daysSince % synodicMonth) + synodicMonth) % synodicMonth;
+        const pct = phase / synodicMonth;
+
+        const phases = [
+          { name: "New Moon", max: 0.02 },
+          { name: "Waxing Crescent", max: 0.25 },
+          { name: "First Quarter", max: 0.27 },
+          { name: "Waxing Gibbous", max: 0.48 },
+          { name: "Full Moon", max: 0.52 },
+          { name: "Waning Gibbous", max: 0.73 },
+          { name: "Last Quarter", max: 0.77 },
+          { name: "Waning Crescent", max: 1.0 },
+        ];
+
+        const match = phases.find((p) => pct <= p.max) || phases[0];
+        const illumination = Math.round(((1 - Math.cos(pct * 2 * Math.PI)) / 2) * 100);
+
+        return { name: match.name, illumination, pct };
+      }
+
+      function drawMoonPath(pct) {
+        const R = 75;
+        let sweep, magFrac;
+
+        if (pct <= 0.25) {
+          sweep = [1, 0];
+          magFrac = 1 - pct * 4;
+        } else if (pct <= 0.5) {
+          sweep = [0, 0];
+          magFrac = (pct - 0.25) * 4;
+        } else if (pct <= 0.75) {
+          sweep = [1, 1];
+          magFrac = 1 - (pct - 0.5) * 4;
+        } else {
+          sweep = [0, 1];
+          magFrac = (pct - 0.75) * 4;
+        }
+
+        const mag = magFrac * R;
+        const d = `M100,${100 - R} A${mag},${R} 0 1,${sweep[0]} 100,${100 + R} A${R},${R} 0 1,${sweep[1]} 100,${100 - R}`;
+        document.getElementById("moonPath").setAttribute("d", d);
+      }
+
+      function renderMoonPhase() {
+        const { name, illumination, pct } = getMoonPhase();
+        document.getElementById("moonName").textContent = name;
+        document.getElementById("moonIllum").textContent = illumination + "% illuminated";
+        drawMoonPath(pct);
+      }
+
+      renderMoonPhase();
+    </script>
+    
+    <script>
+          const tarotCards = [
+        "PASTE_CARD_1_IMAGE_URL_HERE",
+        "PASTE_CARD_2_IMAGE_URL_HERE",
+        "PASTE_CARD_3_IMAGE_URL_HERE",
+        "PASTE_CARD_4_IMAGE_URL_HERE",
+        "PASTE_CARD_5_IMAGE_URL_HERE",
+        "PASTE_CARD_6_IMAGE_URL_HERE",
+        "PASTE_CARD_7_IMAGE_URL_HERE",
+        "PASTE_CARD_8_IMAGE_URL_HERE",
+        "PASTE_CARD_9_IMAGE_URL_HERE",
+        "PASTE_CARD_10_IMAGE_URL_HERE",
+        "PASTE_CARD_11_IMAGE_URL_HERE",
+        "PASTE_CARD_12_IMAGE_URL_HERE",
+        "PASTE_CARD_13_IMAGE_URL_HERE",
+        "PASTE_CARD_14_IMAGE_URL_HERE",
+        "PASTE_CARD_15_IMAGE_URL_HERE",
+        "PASTE_CARD_16_IMAGE_URL_HERE",
+        "PASTE_CARD_17_IMAGE_URL_HERE",
+        "PASTE_CARD_18_IMAGE_URL_HERE",
+        "PASTE_CARD_19_IMAGE_URL_HERE",
+        "PASTE_CARD_20_IMAGE_URL_HERE",
+        "PASTE_CARD_21_IMAGE_URL_HERE",
+        "PASTE_CARD_22_IMAGE_URL_HERE",
+        "PASTE_CARD_23_IMAGE_URL_HERE",
+        "PASTE_CARD_24_IMAGE_URL_HERE",
+        "PASTE_CARD_25_IMAGE_URL_HERE",
+        "PASTE_CARD_26_IMAGE_URL_HERE",
+        "PASTE_CARD_27_IMAGE_URL_HERE",
+        "PASTE_CARD_28_IMAGE_URL_HERE",
+        "PASTE_CARD_29_IMAGE_URL_HERE",
+        "PASTE_CARD_30_IMAGE_URL_HERE",
+        "PASTE_CARD_31_IMAGE_URL_HERE",
+        "PASTE_CARD_32_IMAGE_URL_HERE",
+        "PASTE_CARD_33_IMAGE_URL_HERE",
+        "PASTE_CARD_34_IMAGE_URL_HERE",
+        "PASTE_CARD_35_IMAGE_URL_HERE",
+        "PASTE_CARD_36_IMAGE_URL_HERE",
+        "PASTE_CARD_37_IMAGE_URL_HERE",
+        "PASTE_CARD_38_IMAGE_URL_HERE",
+        "PASTE_CARD_39_IMAGE_URL_HERE",
+        "PASTE_CARD_40_IMAGE_URL_HERE",
+        "PASTE_CARD_41_IMAGE_URL_HERE",
+        "PASTE_CARD_42_IMAGE_URL_HERE",
+        "PASTE_CARD_43_IMAGE_URL_HERE",
+        "PASTE_CARD_44_IMAGE_URL_HERE",
+        "PASTE_CARD_45_IMAGE_URL_HERE",
+        "PASTE_CARD_46_IMAGE_URL_HERE",
+        "PASTE_CARD_47_IMAGE_URL_HERE",
+        "PASTE_CARD_48_IMAGE_URL_HERE",
+        "PASTE_CARD_49_IMAGE_URL_HERE",
+        "PASTE_CARD_50_IMAGE_URL_HERE",
+        "PASTE_CARD_51_IMAGE_URL_HERE",
+        "PASTE_CARD_52_IMAGE_URL_HERE",
+        "PASTE_CARD_53_IMAGE_URL_HERE",
+        "PASTE_CARD_54_IMAGE_URL_HERE",
+        "PASTE_CARD_55_IMAGE_URL_HERE",
+        "PASTE_CARD_56_IMAGE_URL_HERE",
+        "PASTE_CARD_57_IMAGE_URL_HERE",
+        "PASTE_CARD_58_IMAGE_URL_HERE",
+        "PASTE_CARD_59_IMAGE_URL_HERE",
+        "PASTE_CARD_60_IMAGE_URL_HERE",
+        "PASTE_CARD_61_IMAGE_URL_HERE",
+        "PASTE_CARD_62_IMAGE_URL_HERE",
+        "PASTE_CARD_63_IMAGE_URL_HERE",
+        "PASTE_CARD_64_IMAGE_URL_HERE",
+        "PASTE_CARD_65_IMAGE_URL_HERE",
+        "PASTE_CARD_66_IMAGE_URL_HERE",
+        "PASTE_CARD_67_IMAGE_URL_HERE",
+        "PASTE_CARD_68_IMAGE_URL_HERE",
+        "PASTE_CARD_69_IMAGE_URL_HERE",
+        "PASTE_CARD_70_IMAGE_URL_HERE",
+        "PASTE_CARD_71_IMAGE_URL_HERE",
+        "PASTE_CARD_72_IMAGE_URL_HERE",
+        "PASTE_CARD_73_IMAGE_URL_HERE",
+        "PASTE_CARD_74_IMAGE_URL_HERE",
+        "PASTE_CARD_75_IMAGE_URL_HERE",
+        "PASTE_CARD_76_IMAGE_URL_HERE",
+        "PASTE_CARD_77_IMAGE_URL_HERE",
+      ];
+
+      const cardBackImage = document.getElementById("tarotCard");
+      let hasDrawnCard = false;
+
+      // Preload everything so the flip doesn't stutter waiting on images
+      tarotCards.forEach((src) => {
+        const img = new Image();
+        img.src = src;
+      });
+
+      cardBackImage.addEventListener("click", () => {
+        if (hasDrawnCard) return;
+        hasDrawnCard = true;
+
+        cardBackImage.style.transform = "rotateY(90deg)";
+
+        cardBackImage.addEventListener(
+          "transitionend",
+          function flipReveal() {
+            cardBackImage.removeEventListener("transitionend", flipReveal);
+
+            const randomIndex = Math.floor(Math.random() * tarotCards.length);
+            cardBackImage.src = tarotCards[randomIndex];
+            cardBackImage.alt = "Tarot card, revealed";
+            cardBackImage.classList.add("revealed");
+
+            cardBackImage.style.transform = "rotateY(0deg)";
+          },
+          { once: true }
+        );
+      });
+    </script>
+  </body>
+</html>

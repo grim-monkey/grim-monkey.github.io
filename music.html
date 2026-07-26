@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="https://i.imgur.com/hki6WZI.gif" />
+    <meta property="og:image" content="https://i.imgur.com/hki6WZI.gif" />
+    <meta property="twitter:card" content="summary_large_image" />
+    <title>Grim Monkey</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap" rel="stylesheet" />
+
+    <style>
+      /* === GLOBAL === */
+      body {
+        background-image: url("https://imagine-public.x.ai/imagine-public/images/199dc529-aed2-49d3-9c48-a9bd2d477301.png?cache=1&dl=1");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-attachment: scroll;
+        min-height: 100vh;
+
+        color: white;
+        font-family: Arial, sans-serif;
+        margin: 0;
+      }
+
+      /* Cursor  */
+      * {
+        cursor: url(https://cur.cursors-4u.net/symbols/sym-1/sym46.cur), auto !important;
+      }
+
+      h1 {
+        font-family: "Black Ops One", sans-serif;
+        text-align: center;
+        margin-top: 0;
+      }
+
+      /* === MAIN 3-COLUMN LAYOUT === */
+      .layout {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 20px;
+        padding: 40px 120px;
+      }
+
+      /* LEFT COLUMN (stacked boxes) */
+      .left-column {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      /* RIGHT COLUMN (stacked boxes) */
+      .side-column {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      /* Shared box style */
+      .chat-box,
+      .content-box,
+      .side-box {
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+        border-radius: 10px;
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(0, 0, 0, 0.5);
+      }
+
+      /* Chat */
+      .chat-box {
+        padding: 10px;
+        width: 250px;
+        height: 350px;
+      }
+
+      /* Main content */
+      .content-box {
+        padding: 30px;
+        margin: 0;
+        width: 80%;
+        max-width: 850px;
+        text-align: left;
+      }
+
+      /* Side boxes (left + right) */
+      .side-box {
+        width: 230px;
+        padding: 12px 16px;
+        color: white;
+        font-size: 0.9rem;
+      }
+
+      .side-box h3 {
+        margin: 0 0 6px 0;
+        font-size: 1rem;
+      }
+
+      .side-box a {
+        color: white;
+        text-decoration: underline;
+      }
+
+      /* === NAV IN LEFT BOX === */
+      .left-column nav {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-top: 8px;
+      }
+
+      .left-column nav a {
+        text-align: center;
+        text-decoration: none;
+        padding: 8px 14px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        background: rgba(0, 50, 70, 0.4);
+        box-shadow: 0 0 4px rgba(0, 255, 255, 0.4), inset 0 0 4px rgba(0, 255, 255, 0.2);
+        font-weight: bold;
+        color: #b8faff;
+      }
+
+      .left-column nav a:hover {
+        background: rgba(0, 90, 110, 0.6);
+        color: #ffffff;
+        box-shadow: 0 0 12px #00f7ff, 0 0 22px #0085ff, inset 0 0 4px #00baff;
+        text-shadow: 0 0 6px #00f7ff, 0 0 10px #0085ff;
+      }
+
+      /* Website I Like links */
+      .liked-sites a {
+        color: white;
+      }
+
+      /* Artist name that follows the cursor over album images */
+      .artist-tooltip {
+        position: fixed;
+        z-index: 10000;
+        display: none;
+        pointer-events: none;
+        padding: 6px 10px;
+        border: 1px solid rgba(184, 250, 255, 0.8);
+        border-radius: 6px;
+        background: rgba(0, 0, 0, 0.88);
+        color: #b8faff;
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 1.2;
+        white-space: nowrap;
+        box-shadow: 0 0 10px rgba(0, 247, 255, 0.65);
+        text-shadow: 0 0 5px #00f7ff;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Cursor credit (kept as-is) -->
+    <a href="https://www.cursors-4u.com/cursor/2005/05/04/sym46.html" target="_blank">
+      <img
+        src="https://cur.cursors-4u.net/cursor.png"
+        style="position: absolute; top: 0; right: 0"
+        alt="Cursor credit"
+      />
+    </a>
+
+    <div class="layout">
+      <!-- ===== LEFT COLUMN ===== -->
+      <div class="left-column">
+        <!-- Nav box FIRST (above chat) -->
+        <div class="side-box">
+          <nav>
+            <a href="home.html">Home</a>
+            <a href="art.html">Art</a>
+            <a href="music.html">Music</a>
+            <a href="moviesshows.html">Shrines</a>
+            <a href="conspiracies.html">Conspiracies</a>
+            <a href="treasure.html">Treasure</a>
+            <a href="cars.html">Cars</a>
+            <a href="webbuilding.html">WebBuilding</a>
+          </nav>
+        </div>
+
+        <!-- Chat box SECOND -->
+        <div class="chat-box">
+          <script
+            id="cid0020000426385312866"
+            data-cfasync="false"
+            async
+            src="//st.chatango.com/js/gz/emb.js"
+            style="width: 250px; height: 350px"
+          >
+            {"handle":"grimmonkeys","arch":"js","styles":{"a":"336666","b":100,"c":"FFFFFF","d":"FFFFFF","k":"336666","l":"336666","m":"336666","n":"FFFFFF","p":"10","q":"336666","r":100,"fwtickm":1}}
+          </script>
+        </div>    
+      </div>
+
+      <!-- ===== CENTER CONTENT ===== -->
+      <div class="content-box">
+        <h1>Music I Like:</h1>
+
+      <h3>Favorite Bands/Artists:</h3>
+      
+      <p><img src="https://grimmonkey.neocities.org/Screenshot%202025-12-29%20202025.png" width=150 height=150> <img src="https://grimmonkey.neocities.org/2309856.webp" width=150 height=150> <img src="https://grimmonkey.neocities.org/81QL1T0v1TL._UF1000,1000_QL80_.jpg" width=150 height=150> <img src="https://grimmonkey.neocities.org/Suicideboys-Sing-Me-A-Lullaby-My-Sweet-Temptation-Music-Performance-CD_6417b916-724c-425e-a9d2-5c120693608a.a3e98dd9efff69659e3ae43a83ea35be.avif" width=150 height=150> <img src="https://grimmonkey.neocities.org/images.jpeg" width=150 height=150> <img src="https://grimmonkey.neocities.org/Dog_Boy_(ZillaKami).jpg" width=150 height=150> <img src="https://grimmonkey.neocities.org/images%20(1).jpeg" width=150 height=150> <img src="https://grimmonkey.neocities.org/Whatever_People_Say_I_Am,_That's_What_I'm_Not_(2006_Arctic_Monkeys_album).jpg" width=150 height=150> <img src="https://grimmonkey.neocities.org/ab67616d00001e026b98dbf13791547e637e322f.jpeg" with=150 height=150> <img src="https://grimmonkey.neocities.org/images%20(2).jpeg" with=150 height=150> <img src="https://grimmonkey.neocities.org/Hellbilly_Deluxe.jpg" width=150 height=150> <img src="https://grimmonkey.neocities.org/images%20(4).jpeg" wdith=150 height=150> <img src="https://grimmonkey.neocities.org/71i-GSPlL8L._UF1000,1000_QL80_.jpg" with=150 height=150> <img src="https://grimmonkey.neocities.org/5001121ba4d590fa25e728ebc5c4dccb.999x999x1.png" width=150 height=150> <img src="https://grimmonkey.neocities.org/images%20(3).jpeg" width=150 height=150> <img src="https://grimmonkey.neocities.org/SZA_-_Ctrl_cover.png" width=150 height=150> <img src="https://grimmonkey.neocities.org/MelloBuckz.png" width=150 height=150> <img src="https://grimmonkey.neocities.org/distrubed.png" width=150 height=150> <img src="https://grimmonkey.neocities.org/citypop.png" width=150 height=150> <img src="https://grimmonkey.neocities.org/sade.png" width=150 height=150></p>
+
+      
+      <h3>Genres I Like:</h3>
+      <ul>
+        <li>Heavy Metal</li>
+        <li>Nightcore</li>
+        <li>RNB</li>
+        <li>City Pop</li>
+        <li>Rap</li>
+      </ul>
+          
+      </div>
+
+      <!-- ===== RIGHT SIDEBAR ===== -->
+      <div class="side-column">
+        <div class="side-box">
+          <h3><a href="https://neocities.org/browse">Return to NeoBrowser &gt;</a></h3>
+        </div>
+
+        <div class="side-box">
+          <h3>Last Updated:</h3>
+          <p>07-22-2026 @ 8:39pm</p>
+        </div>
+
+        <div class="side-box">
+          <h3>Established:</h3>
+          <p>
+            Dec. 09, 2025 @ 9pm
+            <img src="https://grimmonkey.neocities.org/madeinusa.png" width="100" height="55" alt="Made in USA" />
+          </p>
+        </div>
+
+        <div class="side-box">
+          <h3>Special Notices:</h3>
+          <p>- Not all art/photos on this website are MY content, ex: the backgrounds</p>
+          <p>- 18+ please</p>
+          <p>- If it's underlined, it's a link</p>
+        </div>
+        
+      </div>
+    </div>
+
+    <div id="artistTooltip" class="artist-tooltip" role="tooltip"></div>
+
+    <script>
+      /*
+        These names match the music images from left to right.
+        Replace any "ADD ARTIST NAME" entry with the correct artist.
+      */
+      const artistNames = [
+        "Gorilla Biscuits",
+        "Five Finger Death Punch",
+        "3 Days Grace",
+        "$uicideboy$",
+        "3 Doors Down",
+        "ZillaKami",
+        "Brand of Sacrifice",
+        "Arctic Monkeys",
+        "Doja Cat",
+        "Fallout Boys",
+        "Rob Zombie",
+        "GWAR",
+        "Maroon5",
+        "Megan Thee Stallion",
+        "GloRilla",
+        "SZA",
+        "Mello Buckzz",
+        "Disturbed",
+        "Miki Matsubara",
+        "Sade"
+      ];
+
+      const musicImages = document.querySelectorAll(".content-box img");
+      const artistTooltip = document.getElementById("artistTooltip");
+
+      musicImages.forEach((image, index) => {
+        const artist = artistNames[index] || "Artist unknown";
+        image.dataset.artist = artist;
+        image.alt = artist;
+        image.title = artist;
+
+        image.addEventListener("mouseenter", () => {
+          artistTooltip.textContent = image.dataset.artist;
+          artistTooltip.style.display = "block";
+        });
+
+        image.addEventListener("mousemove", (event) => {
+          const gap = 16;
+          const tooltipWidth = artistTooltip.offsetWidth;
+          const tooltipHeight = artistTooltip.offsetHeight;
+
+          let left = event.clientX + gap;
+          let top = event.clientY + gap;
+
+          if (left + tooltipWidth > window.innerWidth - 8) {
+            left = event.clientX - tooltipWidth - gap;
+          }
+
+          if (top + tooltipHeight > window.innerHeight - 8) {
+            top = event.clientY - tooltipHeight - gap;
+          }
+
+          artistTooltip.style.left = left + "px";
+          artistTooltip.style.top = top + "px";
+        });
+
+        image.addEventListener("mouseleave", () => {
+          artistTooltip.style.display = "none";
+        });
+      });
+    </script>
+  </body>
+</html>
