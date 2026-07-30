@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="https://i.imgur.com/hki6WZI.gif" />
     <meta property="og:image" content="https://i.imgur.com/hki6WZI.gif" />
     <title>Grim Monkey</title>
@@ -403,8 +404,127 @@
       }
 
       @media (max-width: 600px) {
+        .layout {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
+          align-items: start;
+          gap: 5px;
+          padding: 12px 4px;
+        }
+
+        .left-column,
+        .side-column,
+        .content-box {
+          min-width: 0;
+        }
+
+        .left-column,
+        .side-column {
+          gap: 6px;
+        }
+
+        .side-box,
+        .chat-box,
+        .content-box {
+          box-sizing: border-box;
+          border-radius: 5px;
+        }
+
+        .side-box {
+          width: 100%;
+          padding: 6px 4px;
+          font-size: 0.5rem;
+          overflow-wrap: anywhere;
+        }
+
+        .side-box h3 {
+          font-size: 0.58rem;
+        }
+
+        .side-box p {
+          margin: 5px 0;
+        }
+
+        .side-box img,
+        .content-box img {
+          max-width: 100%;
+          height: auto;
+        }
+
+        .left-column nav {
+          gap: 3px;
+          margin-top: 3px;
+        }
+
+        .left-column nav a {
+          padding: 4px 2px;
+          font-size: 0.55rem;
+        }
+
+        .chat-box {
+          width: 100%;
+          height: 130px;
+          padding: 4px;
+          overflow: hidden;
+        }
+
+        .chat-box iframe {
+          width: 100% !important;
+          height: 100% !important;
+        }
+
+        .content-box {
+          width: 100%;
+          padding: 8px 6px;
+          font-size: 0.62rem;
+          overflow-wrap: anywhere;
+        }
+
+        .content-box h1 {
+          font-size: 1rem;
+        }
+
+        .content-box h2 {
+          font-size: 0.78rem;
+        }
+
+        .moon-box {
+          gap: 5px;
+        }
+
+        .moon-box svg {
+          width: 42px;
+          height: 42px;
+          flex: 0 0 42px;
+        }
+
+        .weather-box {
+          padding: 7px;
+        }
+
+        .weather-search {
+          gap: 4px;
+        }
+
+        .weather-search input {
+          min-width: 0;
+          width: 100%;
+        }
+
         .forecast-list {
-          grid-template-columns: repeat(2, minmax(92px, 1fr));
+          grid-template-columns: 1fr;
+        }
+
+        .center-button {
+          width: 100%;
+          box-sizing: border-box;
+          padding: 7px 3px;
+          font-size: 0.58rem;
+          text-align: center;
+        }
+
+        .updatesScroll {
+          max-height: 130px;
         }
       }
     </style>
