@@ -153,6 +153,29 @@
         box-shadow: 0 0 10px rgba(0, 247, 255, 0.65);
         text-shadow: 0 0 5px #00f7ff;
       }
+
+      .music-group {
+        margin-top: 28px;
+      }
+
+      .music-group h3 {
+        margin-bottom: 12px;
+        color: #b8faff;
+        text-shadow: 0 0 6px rgba(0, 247, 255, 0.7);
+      }
+
+      .album-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, 150px);
+        gap: 12px;
+      }
+
+      .album-grid img {
+        display: block;
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+      }
     </style>
   </head>
 
@@ -201,9 +224,51 @@
       <div class="content-box">
         <h1>Music I Like:</h1>
 
-      <h3>Favorite Bands/Artists:</h3>
-      
-      <p><img src="assets/images/Screenshot%202025-12-29%20202025.png" width=150 height=150> <img src="assets/images/2309856.webp" width=150 height=150> <img src="assets/images/81QL1T0v1TL._UF1000,1000_QL80_.jpg" width=150 height=150> <img src="assets/images/Suicideboys-Sing-Me-A-Lullaby-My-Sweet-Temptation-Music-Performance-CD_6417b916-724c-425e-a9d2-5c120693608a.a3e98dd9efff69659e3ae43a83ea35be.avif" width=150 height=150> <img src="assets/images/images.jpeg" width=150 height=150> <img src="assets/images/Dog_Boy_(ZillaKami).jpg" width=150 height=150> <img src="assets/images/images%20(1).jpeg" width=150 height=150> <img src="assets/images/Whatever_People_Say_I_Am,_That's_What_I'm_Not_(2006_Arctic_Monkeys_album).jpg" width=150 height=150> <img src="assets/images/ab67616d00001e026b98dbf13791547e637e322f.jpeg" with=150 height=150> <img src="assets/images/images%20(2).jpeg" with=150 height=150> <img src="assets/images/Hellbilly_Deluxe.jpg" width=150 height=150> <img src="assets/images/images%20(4).jpeg" wdith=150 height=150> <img src="assets/images/71i-GSPlL8L._UF1000,1000_QL80_.jpg" with=150 height=150> <img src="assets/images/5001121ba4d590fa25e728ebc5c4dccb.999x999x1.png" width=150 height=150> <img src="assets/images/images%20(3).jpeg" width=150 height=150> <img src="assets/images/SZA_-_Ctrl_cover.png" width=150 height=150> <img src="assets/images/MelloBuckz.png" width=150 height=150> <img src="assets/images/distrubed.png" width=150 height=150> <img src="assets/images/citypop.png" width=150 height=150> <img src="assets/images/sade.png" width=150 height=150></p>
+      <h2>Favorite Bands/Artists:</h2>
+
+      <section class="music-group">
+        <h3>Metal &amp; Hardcore</h3>
+        <div class="album-grid">
+          <img src="assets/images/images%20(1).jpeg" alt="Brand of Sacrifice" data-artist="Brand of Sacrifice" />
+          <img src="assets/images/distrubed.png" alt="Disturbed" data-artist="Disturbed" />
+          <img src="assets/images/2309856.webp" alt="Five Finger Death Punch" data-artist="Five Finger Death Punch" />
+          <img src="assets/images/Hellbilly_Deluxe.jpg" alt="Rob Zombie" data-artist="Rob Zombie" />
+          <img src="assets/images/images%20(4).jpeg" alt="GWAR" data-artist="GWAR" />
+          <img src="assets/images/Dog_Boy_(ZillaKami).jpg" alt="ZillaKami" data-artist="ZillaKami" />
+          <img src="assets/images/Screenshot%202025-12-29%20202025.png" alt="Gorilla Biscuits" data-artist="Gorilla Biscuits" />
+        </div>
+      </section>
+
+      <section class="music-group">
+        <h3>Rock, Screamo &amp; Emo</h3>
+        <div class="album-grid">
+          <img src="assets/images/81QL1T0v1TL._UF1000,1000_QL80_.jpg" alt="Three Days Grace" data-artist="Three Days Grace" />
+          <img src="assets/images/images.jpeg" alt="3 Doors Down" data-artist="3 Doors Down" />
+          <img src="assets/images/images%20(2).jpeg" alt="Fall Out Boy" data-artist="Fall Out Boy" />
+          <img src="assets/images/Whatever_People_Say_I_Am,_That's_What_I'm_Not_(2006_Arctic_Monkeys_album).jpg" alt="Arctic Monkeys" data-artist="Arctic Monkeys" />
+          <img src="assets/images/71i-GSPlL8L._UF1000,1000_QL80_.jpg" alt="Maroon 5" data-artist="Maroon 5" />
+        </div>
+      </section>
+
+      <section class="music-group">
+        <h3>Rap</h3>
+        <div class="album-grid">
+          <img src="assets/images/Suicideboys-Sing-Me-A-Lullaby-My-Sweet-Temptation-Music-Performance-CD_6417b916-724c-425e-a9d2-5c120693608a.a3e98dd9efff69659e3ae43a83ea35be.avif" alt="$uicideboy$" data-artist="$uicideboy$" />
+          <img src="assets/images/ab67616d00001e026b98dbf13791547e637e322f.jpeg" alt="Doja Cat" data-artist="Doja Cat" />
+          <img src="assets/images/5001121ba4d590fa25e728ebc5c4dccb.999x999x1.png" alt="Megan Thee Stallion" data-artist="Megan Thee Stallion" />
+          <img src="assets/images/images%20(3).jpeg" alt="GloRilla" data-artist="GloRilla" />
+          <img src="assets/images/MelloBuckz.png" alt="Mello Buckzz" data-artist="Mello Buckzz" />
+        </div>
+      </section>
+
+      <section class="music-group">
+        <h3>R&amp;B, City Pop &amp; Calmer Sounds</h3>
+        <div class="album-grid">
+          <img src="assets/images/SZA_-_Ctrl_cover.png" alt="SZA" data-artist="SZA" />
+          <img src="assets/images/sade.png" alt="Sade" data-artist="Sade" />
+          <img src="assets/images/citypop.png" alt="Miki Matsubara" data-artist="Miki Matsubara" />
+        </div>
+      </section>
 
       
       <h3>Genres I Like:</h3>
@@ -225,7 +290,7 @@
 
         <div class="side-box">
           <h3>Last Updated:</h3>
-          <p>07-22-2026 @ 8:39pm</p>
+          <p>07-30-2026</p>
         </div>
 
         <div class="side-box">
@@ -249,42 +314,10 @@
     <div id="artistTooltip" class="artist-tooltip" role="tooltip"></div>
 
     <script>
-      /*
-        These names match the music images from left to right.
-        Replace any "ADD ARTIST NAME" entry with the correct artist.
-      */
-      const artistNames = [
-        "Gorilla Biscuits",
-        "Five Finger Death Punch",
-        "3 Days Grace",
-        "$uicideboy$",
-        "3 Doors Down",
-        "ZillaKami",
-        "Brand of Sacrifice",
-        "Arctic Monkeys",
-        "Doja Cat",
-        "Fallout Boys",
-        "Rob Zombie",
-        "GWAR",
-        "Maroon5",
-        "Megan Thee Stallion",
-        "GloRilla",
-        "SZA",
-        "Mello Buckzz",
-        "Disturbed",
-        "Miki Matsubara",
-        "Sade"
-      ];
-
-      const musicImages = document.querySelectorAll(".content-box img");
+      const musicImages = document.querySelectorAll(".album-grid img");
       const artistTooltip = document.getElementById("artistTooltip");
 
-      musicImages.forEach((image, index) => {
-        const artist = artistNames[index] || "Artist unknown";
-        image.dataset.artist = artist;
-        image.alt = artist;
-        image.title = artist;
-
+      musicImages.forEach((image) => {
         image.addEventListener("mouseenter", () => {
           artistTooltip.textContent = image.dataset.artist;
           artistTooltip.style.display = "block";
