@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 318" role="img" aria-labelledby="title">
+  <title id="title">Tarot card back</title>
+  <defs>
+    <pattern id="stars" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z" fill="#b8faff" opacity=".75"/>
+    </pattern>
+    <radialGradient id="glow">
+      <stop offset="0" stop-color="#145c78"/>
+      <stop offset="1" stop-color="#06151f"/>
+    </radialGradient>
+  </defs>
+  <rect width="180" height="318" rx="10" fill="#02090e"/>
+  <rect x="7" y="7" width="166" height="304" rx="7" fill="url(#glow)" stroke="#b8faff" stroke-width="2"/>
+  <rect x="15" y="15" width="150" height="288" rx="4" fill="url(#stars)" stroke="#4fc9df"/>
+  <circle cx="90" cy="159" r="52" fill="#06151f" stroke="#b8faff" stroke-width="3"/>
+  <path d="M105 117a45 45 0 1 0 0 84 51 51 0 0 1 0-84z" fill="#b8faff"/>
+  <circle cx="90" cy="159" r="63" fill="none" stroke="#4fc9df" stroke-width="2" stroke-dasharray="3 7"/>
+</svg>
