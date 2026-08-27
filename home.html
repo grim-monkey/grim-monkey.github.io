@@ -250,13 +250,22 @@
         perspective: 1000px;
       }
 
+      .tarot-stage {
+        width: 180px;
+        height: 318px;
+        display: grid;
+        place-items: center;
+      }
+
       .tarot-img {
+        grid-area: 1 / 1;
         width: 180px;
         height: 318px;
         cursor: pointer;
         display: block;
         border-radius: 10px;
-        transition: transform 0.3s ease-in, filter 0.4s ease;
+        opacity: 1;
+        transition: transform 0.3s ease-in, filter 0.4s ease, opacity 0.4s ease;
         will-change: transform;
       }
 
@@ -266,11 +275,21 @@
           drop-shadow(0 0 36px rgba(0, 0, 0, 0.5));
       }
 
-      .tarot-controls {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-top: 18px;
+      .tarot-img.fading-out {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      #drawTarotCard {
+        grid-area: 1 / 1;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.4s ease;
+      }
+
+      #drawTarotCard.visible {
+        opacity: 1;
+        visibility: visible;
       }
 
       /* === scroll side box === */
@@ -751,14 +770,16 @@
         <h2>Want to know your future?</h2>
 
         <div class="tarot-wrap">
-          <img
-            id="tarotCard"
-            class="tarot-img"
-            src="assets/images/tarot/card-back.svg"
-            alt="Tarot card back"
-          />
-          <div class="tarot-controls">
-            <button id="drawTarotCard" type="button">Pull a card</button>
+          <div class="tarot-stage">
+            <img
+              id="tarotCard"
+              class="tarot-img"
+              src="assets/images/tarot/card-back.svg"
+              alt="Tarot card back"
+            />
+            <button id="drawTarotCard" type="button" disabled>
+              Pull another card
+            </button>
           </div>
         </div>
         
@@ -1013,7 +1034,6 @@
       function drawTarotCard() {
         if (isDrawingCard) return;
         isDrawingCard = true;
-        drawTarotButton.disabled = true;
 
         cardBackImage.style.transform = "rotateY(90deg)";
 
@@ -1029,16 +1049,32 @@
             cardBackImage.classList.add("revealed");
 
             cardBackImage.style.transform = `rotateY(0deg) rotate(${isReversed ? 180 : 0}deg)`;
-            drawTarotButton.textContent = "Pull another card";
-            drawTarotButton.disabled = false;
-            isDrawingCard = false;
+
+            setTimeout(() => {
+              cardBackImage.classList.add("fading-out");
+
+              setTimeout(() => {
+                drawTarotButton.disabled = false;
+                drawTarotButton.classList.add("visible");
+              }, 400);
+            }, 5000);
           },
           { once: true }
         );
       }
 
+      function resetTarotCard() {
+        drawTarotButton.disabled = true;
+        drawTarotButton.classList.remove("visible");
+        cardBackImage.src = "assets/images/tarot/card-back.svg";
+        cardBackImage.alt = "Tarot card back";
+        cardBackImage.classList.remove("revealed", "fading-out");
+        cardBackImage.style.transform = "rotateY(0deg) rotate(0deg)";
+        isDrawingCard = false;
+      }
+
       cardBackImage.addEventListener("click", drawTarotCard);
-      drawTarotButton.addEventListener("click", drawTarotCard);
+      drawTarotButton.addEventListener("click", resetTarotCard);
     </script>
 
     <script>
