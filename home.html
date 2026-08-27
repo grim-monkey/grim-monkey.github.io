@@ -243,9 +243,31 @@
       
       .tarot-wrap {
         display: flex;
+        flex-direction: column;
+        align-items: center;
         justify-content: center;
         margin: 20px auto;
         perspective: 1000px;
+      }
+
+      .tarot-stage {
+        width: 180px;
+        height: 318px;
+        display: grid;
+        place-items: center;
+      }
+
+      .tarot-card-shell {
+        grid-area: 1 / 1;
+        width: 180px;
+        height: 318px;
+        transition: transform 0.3s ease-in;
+        transform-style: preserve-3d;
+        will-change: transform;
+      }
+
+      .tarot-card-shell.awaiting-redraw {
+        pointer-events: none;
       }
 
       .tarot-img {
@@ -254,15 +276,61 @@
         cursor: pointer;
         display: block;
         border-radius: 10px;
-        transition: transform 0.3s ease-in, filter 0.4s ease;
-        will-change: transform;
+        opacity: 1;
+        transition: filter 0.4s ease, opacity 0.4s ease;
+      }
+
+      .tarot-img.reversed {
+        transform: rotate(180deg);
       }
 
       .tarot-img.revealed {
-        cursor: default;
         filter: drop-shadow(0 0 12px rgba(0, 0, 0, 0.9))
           drop-shadow(0 0 24px rgba(0, 0, 0, 0.7))
           drop-shadow(0 0 36px rgba(0, 0, 0, 0.5));
+      }
+
+      .tarot-img.fading-out {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      #drawTarotCard {
+        grid-area: 1 / 1;
+        max-width: none;
+        padding: 11px 14px;
+        color: #b8faff;
+        background: radial-gradient(circle, #145c78 0%, #06151f 100%);
+        border: 2px solid #b8faff;
+        border-radius: 4px;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.9),
+          0 0 18px rgba(0, 0, 0, 0.7),
+          inset 0 0 9px rgba(79, 201, 223, 0.3);
+        font-family: Arial, sans-serif;
+        font-size: 0.85rem;
+        font-weight: bold;
+        line-height: 1;
+        letter-spacing: 0.2px;
+        text-shadow: 0 0 6px rgba(184, 250, 255, 0.7);
+        white-space: nowrap;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.4s ease, color 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      #drawTarotCard:hover,
+      #drawTarotCard:focus-visible {
+        color: #b8faff;
+        background: radial-gradient(circle, #197092 0%, #06151f 100%);
+        box-shadow: 0 0 12px #000, 0 0 26px rgba(0, 0, 0, 0.85),
+          inset 0 0 12px rgba(184, 250, 255, 0.32);
+        outline: none;
+      }
+
+      #drawTarotCard.visible {
+        opacity: 1;
+        visibility: visible;
       }
 
       /* === scroll side box === */
@@ -743,12 +811,19 @@
         <h2>Want to know your future?</h2>
 
         <div class="tarot-wrap">
-          <img
-            id="tarotCard"
-            class="tarot-img"
-            src="assets/images/tarot/card-back.svg"
-            alt="Tarot card back"
-          />
+          <div class="tarot-stage">
+            <div id="tarotCardShell" class="tarot-card-shell">
+              <img
+                id="tarotCard"
+                class="tarot-img"
+                src="assets/images/tarot/card-back.svg"
+                alt="Tarot card back"
+              />
+            </div>
+            <button id="drawTarotCard" type="button" disabled>
+              ✦ Pull another card ✦
+            </button>
+          </div>
         </div>
         
       </div>
@@ -990,7 +1065,9 @@
       ].map((filename) => `assets/images/tarot/${filename}`);
 
       const cardBackImage = document.getElementById("tarotCard");
-      let hasDrawnCard = false;
+      const tarotCardShell = document.getElementById("tarotCardShell");
+      const drawTarotButton = document.getElementById("drawTarotCard");
+      let isDrawingCard = false;
 
       // Preload everything so the flip doesn't stutter waiting on images
       tarotCards.forEach((src) => {
@@ -998,27 +1075,53 @@
         img.src = src;
       });
 
-      cardBackImage.addEventListener("click", () => {
-        if (hasDrawnCard) return;
-        hasDrawnCard = true;
+      function drawTarotCard() {
+        if (isDrawingCard) return;
+        isDrawingCard = true;
 
-        cardBackImage.style.transform = "rotateY(90deg)";
+        tarotCardShell.style.transform = "rotateY(90deg)";
 
-        cardBackImage.addEventListener(
+        tarotCardShell.addEventListener(
           "transitionend",
           function flipReveal() {
-            cardBackImage.removeEventListener("transitionend", flipReveal);
+            tarotCardShell.removeEventListener("transitionend", flipReveal);
 
             const randomIndex = Math.floor(Math.random() * tarotCards.length);
+            const isReversed = Math.random() < 0.5;
             cardBackImage.src = tarotCards[randomIndex];
-            cardBackImage.alt = "Tarot card, revealed";
+            cardBackImage.alt = `Tarot card, ${isReversed ? "reversed" : "upright"}`;
+            cardBackImage.classList.toggle("reversed", isReversed);
             cardBackImage.classList.add("revealed");
 
-            cardBackImage.style.transform = "rotateY(0deg)";
+            tarotCardShell.style.transform = "rotateY(0deg)";
+
+            setTimeout(() => {
+              cardBackImage.classList.add("fading-out");
+              tarotCardShell.classList.add("awaiting-redraw");
+
+              setTimeout(() => {
+                drawTarotButton.disabled = false;
+                drawTarotButton.classList.add("visible");
+              }, 400);
+            }, 5000);
           },
           { once: true }
         );
-      });
+      }
+
+      function resetTarotCard() {
+        drawTarotButton.disabled = true;
+        drawTarotButton.classList.remove("visible");
+        cardBackImage.src = "assets/images/tarot/card-back.svg";
+        cardBackImage.alt = "Tarot card back";
+        cardBackImage.classList.remove("revealed", "reversed", "fading-out");
+        tarotCardShell.classList.remove("awaiting-redraw");
+        tarotCardShell.style.transform = "rotateY(0deg)";
+        isDrawingCard = false;
+      }
+
+      cardBackImage.addEventListener("click", drawTarotCard);
+      drawTarotButton.addEventListener("click", resetTarotCard);
     </script>
 
     <script>
