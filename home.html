@@ -268,15 +268,9 @@
 
       .tarot-controls {
         display: flex;
-        flex-wrap: wrap;
         align-items: center;
         justify-content: center;
-        gap: 10px 16px;
         margin-top: 18px;
-      }
-
-      .tarot-controls label {
-        cursor: pointer;
       }
 
       /* === scroll side box === */
@@ -764,10 +758,6 @@
             alt="Tarot card back"
           />
           <div class="tarot-controls">
-            <label>
-              <input id="allowReversedTarot" type="checkbox" />
-              Allow reversed cards
-            </label>
             <button id="drawTarotCard" type="button">Pull a card</button>
           </div>
         </div>
@@ -1012,7 +1002,6 @@
 
       const cardBackImage = document.getElementById("tarotCard");
       const drawTarotButton = document.getElementById("drawTarotCard");
-      const allowReversedTarot = document.getElementById("allowReversedTarot");
       let isDrawingCard = false;
 
       // Preload everything so the flip doesn't stutter waiting on images
@@ -1034,7 +1023,7 @@
             cardBackImage.removeEventListener("transitionend", flipReveal);
 
             const randomIndex = Math.floor(Math.random() * tarotCards.length);
-            const isReversed = allowReversedTarot.checked && Math.random() < 0.5;
+            const isReversed = Math.random() < 0.5;
             cardBackImage.src = tarotCards[randomIndex];
             cardBackImage.alt = `Tarot card, ${isReversed ? "reversed" : "upright"}`;
             cardBackImage.classList.add("revealed");
