@@ -257,16 +257,31 @@
         place-items: center;
       }
 
-      .tarot-img {
+      .tarot-card-shell {
         grid-area: 1 / 1;
+        width: 180px;
+        height: 318px;
+        transition: transform 0.3s ease-in;
+        transform-style: preserve-3d;
+        will-change: transform;
+      }
+
+      .tarot-card-shell.awaiting-redraw {
+        pointer-events: none;
+      }
+
+      .tarot-img {
         width: 180px;
         height: 318px;
         cursor: pointer;
         display: block;
         border-radius: 10px;
         opacity: 1;
-        transition: transform 0.3s ease-in, filter 0.4s ease, opacity 0.4s ease;
-        will-change: transform;
+        transition: filter 0.4s ease, opacity 0.4s ease;
+      }
+
+      .tarot-img.reversed {
+        transform: rotate(180deg);
       }
 
       .tarot-img.revealed {
@@ -282,9 +297,33 @@
 
       #drawTarotCard {
         grid-area: 1 / 1;
+        max-width: 150px;
+        padding: 13px 16px;
+        color: #b8faff;
+        background: radial-gradient(circle, #18343d 0%, #071014 72%);
+        border: 2px solid #00baff;
+        border-radius: 4px;
+        box-shadow: 0 0 8px rgba(0, 247, 255, 0.75),
+          0 0 18px rgba(0, 133, 255, 0.5),
+          inset 0 0 12px rgba(0, 186, 255, 0.2);
+        font-family: "Black Ops One", sans-serif;
+        font-size: 0.9rem;
+        line-height: 1.35;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        text-shadow: 0 0 6px #00f7ff;
         opacity: 0;
         visibility: hidden;
-        transition: opacity 0.4s ease;
+        transition: opacity 0.4s ease, color 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      #drawTarotCard:hover,
+      #drawTarotCard:focus-visible {
+        color: #fff;
+        box-shadow: 0 0 12px #00f7ff, 0 0 26px #0085ff,
+          inset 0 0 16px rgba(0, 247, 255, 0.28);
+        outline: none;
       }
 
       #drawTarotCard.visible {
@@ -771,14 +810,16 @@
 
         <div class="tarot-wrap">
           <div class="tarot-stage">
-            <img
-              id="tarotCard"
-              class="tarot-img"
-              src="assets/images/tarot/card-back.svg"
-              alt="Tarot card back"
-            />
+            <div id="tarotCardShell" class="tarot-card-shell">
+              <img
+                id="tarotCard"
+                class="tarot-img"
+                src="assets/images/tarot/card-back.svg"
+                alt="Tarot card back"
+              />
+            </div>
             <button id="drawTarotCard" type="button" disabled>
-              Pull another card
+              ✦ Pull another card ✦
             </button>
           </div>
         </div>
@@ -1022,6 +1063,7 @@
       ].map((filename) => `assets/images/tarot/${filename}`);
 
       const cardBackImage = document.getElementById("tarotCard");
+      const tarotCardShell = document.getElementById("tarotCardShell");
       const drawTarotButton = document.getElementById("drawTarotCard");
       let isDrawingCard = false;
 
@@ -1035,23 +1077,25 @@
         if (isDrawingCard) return;
         isDrawingCard = true;
 
-        cardBackImage.style.transform = "rotateY(90deg)";
+        tarotCardShell.style.transform = "rotateY(90deg)";
 
-        cardBackImage.addEventListener(
+        tarotCardShell.addEventListener(
           "transitionend",
           function flipReveal() {
-            cardBackImage.removeEventListener("transitionend", flipReveal);
+            tarotCardShell.removeEventListener("transitionend", flipReveal);
 
             const randomIndex = Math.floor(Math.random() * tarotCards.length);
             const isReversed = Math.random() < 0.5;
             cardBackImage.src = tarotCards[randomIndex];
             cardBackImage.alt = `Tarot card, ${isReversed ? "reversed" : "upright"}`;
+            cardBackImage.classList.toggle("reversed", isReversed);
             cardBackImage.classList.add("revealed");
 
-            cardBackImage.style.transform = `rotateY(0deg) rotate(${isReversed ? 180 : 0}deg)`;
+            tarotCardShell.style.transform = "rotateY(0deg)";
 
             setTimeout(() => {
               cardBackImage.classList.add("fading-out");
+              tarotCardShell.classList.add("awaiting-redraw");
 
               setTimeout(() => {
                 drawTarotButton.disabled = false;
@@ -1068,8 +1112,9 @@
         drawTarotButton.classList.remove("visible");
         cardBackImage.src = "assets/images/tarot/card-back.svg";
         cardBackImage.alt = "Tarot card back";
-        cardBackImage.classList.remove("revealed", "fading-out");
-        cardBackImage.style.transform = "rotateY(0deg) rotate(0deg)";
+        cardBackImage.classList.remove("revealed", "reversed", "fading-out");
+        tarotCardShell.classList.remove("awaiting-redraw");
+        tarotCardShell.style.transform = "rotateY(0deg)";
         isDrawingCard = false;
       }
 
