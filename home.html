@@ -217,7 +217,28 @@
         background: rgba(10, 10, 10, 0.85);
         border-color: #1a1a1a;
       }
-      
+
+      .center-button.three-am-glow {
+        background: rgba(0, 55, 62, 0.82);
+        border-color: #b8faff;
+        animation: three-am-glow 1.8s ease-in-out infinite alternate;
+      }
+
+      .center-button.three-am-glow:hover {
+        background: rgba(0, 55, 62, 0.97);
+      }
+
+      @keyframes three-am-glow {
+        from {
+          box-shadow: 0 0 8px #00f7ff, 0 0 14px rgba(0, 133, 255, 0.7);
+          text-shadow: 0 0 5px #00f7ff;
+        }
+        to {
+          box-shadow: 0 0 20px #b8faff, 0 0 42px #00f7ff, 0 0 65px rgba(0, 133, 255, 0.85);
+          text-shadow: 0 0 10px #b8faff, 0 0 18px #00f7ff;
+        }
+      }
+
       /* === MOON PHASE WIDGET === */
       .moon-box {
         display: flex;
@@ -922,10 +943,23 @@
   document.querySelectorAll(".banner-time").forEach(el => {
     el.textContent = timeString;
   });
+
 }
 
       updateBannerTime();
       setInterval(updateBannerTime, 60000);
+
+      // Use the visitor's local clock and check every second so the glow
+      // starts and stops promptly at the 3:00 a.m. hour boundaries.
+      function updateThreeAmGlow(now = new Date()) {
+        document.querySelector(".center-button")?.classList.toggle(
+          "three-am-glow",
+          now.getHours() === 3
+        );
+      }
+
+      updateThreeAmGlow();
+      setInterval(updateThreeAmGlow, 1000);
     </script>
 
     <script>
