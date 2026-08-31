@@ -217,6 +217,30 @@
         background: rgba(10, 10, 10, 0.85);
         border-color: #1a1a1a;
       }
+
+      .center-button.three-am-glow {
+        border-color: #b8faff;
+        animation: three-am-glow 1.8s ease-in-out infinite alternate;
+      }
+
+      @keyframes three-am-glow {
+        from {
+          box-shadow: 0 0 8px #00f7ff, 0 0 14px rgba(0, 133, 255, 0.7);
+          text-shadow: 0 0 5px #00f7ff;
+        }
+        to {
+          box-shadow: 0 0 16px #00f7ff, 0 0 32px #0085ff, 0 0 48px rgba(0, 133, 255, 0.7);
+          text-shadow: 0 0 8px #b8faff, 0 0 14px #00f7ff;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .center-button.three-am-glow {
+          animation: none;
+          box-shadow: 0 0 16px #00f7ff, 0 0 32px #0085ff;
+          text-shadow: 0 0 8px #b8faff;
+        }
+      }
       
       /* === MOON PHASE WIDGET === */
       .moon-box {
@@ -922,6 +946,11 @@
   document.querySelectorAll(".banner-time").forEach(el => {
     el.textContent = timeString;
   });
+
+  document.querySelector(".center-button")?.classList.toggle(
+    "three-am-glow",
+    now.getHours() === 3
+  );
 }
 
       updateBannerTime();
