@@ -944,14 +944,22 @@
     el.textContent = timeString;
   });
 
-  document.querySelector(".center-button")?.classList.toggle(
-    "three-am-glow",
-    now.getHours() === 3
-  );
 }
 
       updateBannerTime();
       setInterval(updateBannerTime, 60000);
+
+      // Use the visitor's local clock and check every second so the glow
+      // starts and stops promptly at the 3:00 a.m. hour boundaries.
+      function updateThreeAmGlow(now = new Date()) {
+        document.querySelector(".center-button")?.classList.toggle(
+          "three-am-glow",
+          now.getHours() === 3
+        );
+      }
+
+      updateThreeAmGlow();
+      setInterval(updateThreeAmGlow, 1000);
     </script>
 
     <script>
